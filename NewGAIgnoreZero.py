@@ -244,7 +244,7 @@ def fitness(indi):
         total += indi["T"][index]
         move = indi["move"][index]
         gen = indi["gen"][index]
-        row = [(u, gen[u]) for u in move if gen[u] > 0]
+        row = [(u, gen[u]) for u in move if gen[u] >= 1]
         if not row:
             continue
         for id, current in enumerate(row):
@@ -388,7 +388,7 @@ def injust(indi):
         temp_E = [E_now[j] - T * e[j] for j, _ in enumerate(node_pos)]
         temp_E_mc = E_mc_now + T * e_mc
         # row chua vi tri va thoi gian sac cua nhung diem sac co thoi gian sac > 0
-        row = [(u, gen[u]) for u in move if gen[u] > 0]
+        row = [(u, gen[u]) for u in move if gen[u] >= 1]
         # neu tat ca cac xu = 0 thi bo qua chu ki nay va tinh toan den chu ki tiep theo
         if not row:
             isStop = True
@@ -745,7 +745,7 @@ def test(indi):
 # main task
 index = 0
 
-while index < 8:
+while index < 1:
     print "Data Set ", index
     if index == 2:
         index = index + 1
@@ -765,7 +765,7 @@ while index < 8:
         start_time = time.time()
 
         random.seed(idRun)
-        getData(file_name="thaydoinangluongmc.csv", index=index)
+        getData(file_name="thaydoisonode.csv", index=index)
         population_size = 10 * cpu_count()
         charge = [[charging(node, pos) for u, pos in enumerate(charge_pos)] for j, node in enumerate(node_pos)]
         delta = [[charge[j][u] - e[j] for u, _ in enumerate(charge_pos)] for j, _ in enumerate(node_pos)]
