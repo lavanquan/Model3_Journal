@@ -10,6 +10,7 @@ import csv
 import time
 from scipy.stats import sem, t
 from scipy import mean
+import sys
 
 node_pos = [(10, 10), (30, 30), (50, 50), (70, 70), (90, 90),
             (10, 30), (30, 10), (30, 50), (50, 30), (50, 70)]
@@ -673,7 +674,7 @@ def evolution(maxIterator, pc, pm, m_ran, m_uni, w):
     while t < maxIterator and nbIte < 200:
         # print "t = ", t, "Fitness = ", population[0]["fitness"]
         count = 0  # dem so lan mutation
-        nproc = cpu_count()
+        nproc = 5
         process = []
         connection = []
 
@@ -696,14 +697,14 @@ def evolution(maxIterator, pc, pm, m_ran, m_uni, w):
             else:
                 nbIte = nbIte + 1
 
-            if t % 10 == 0:
+            if t % 1000 == 0:
                 conv.append((t, population[0]["fitness"]))
         except:
             print population
             break
         # max_gen = population[0]["num_gen"]
         # population = selectionBest(population)
-        if t % 10 == 0:
+        if t % 100 == 0:
             print t, count, round(population[0]["fitness"], 1), population[0]["num_gen"]
         t += 1
     # population = selectionBest(population)
@@ -744,13 +745,18 @@ def test(indi):
 
 # main task
 index = 0
-
-while index < 1:
+p_ran = m_ran = sys.argv[1]
+p_uni = m_uni = sys.argv[2]
+read_name = sys.argv[3]
+write_name = sys.argv[4]
+nb_run = sys.argv[5]
+index_range = sys.argv[6]
+while index < index_range:
     print "Data Set ", index
-    if index == 2:
-        index = index + 1
-        continue
-    file_name = "GA/DataSet" + str(index) + ".csv"
+    # if index == 2:
+    # index = index + 1
+    #     continue
+    file_name = "GA/" + write_name + str(index) + ".csv"
     f = open(file_name, mode="w")
     header = ["Lan Chay", "Time", "Co Sac", "Khong Sac"]
     writer = csv.DictWriter(f, fieldnames=header)
@@ -758,26 +764,26 @@ while index < 1:
 
     sum_lifetime = 0.0
     sum_time = 0.0
-    nbRun = 5
+    # nbRun = 5
     conv = []
     confidence_interval = []
-    for idRun in range(nbRun):
+    for idRun in range(nb_run):
         start_time = time.time()
-
         random.seed(idRun)
-        getData(file_name="thaydoisonode.csv", index=index)
-        population_size = 10 * cpu_count()
+        getData(file_name=read_name, index=index)
+        # population_size = 5 * cpu_count()
+        population_size = 50
         charge = [[charging(node, pos) for u, pos in enumerate(charge_pos)] for j, node in enumerate(node_pos)]
         delta = [[charge[j][u] - e[j] for u, _ in enumerate(charge_pos)] for j, _ in enumerate(node_pos)]
         # print max(charge)
         # print max(e)
         w = getWeightLinearPrograming()
-        population = [individual(w=w, p_ran=0.5, p_uni=0.5) for _ in range(population_size)]
+        population = [individual(w=w, p_ran=float(p_ran), p_uni=float(p_uni)) for _ in range(population_size)]
         # for indi in population:
         #     print indi["num_gen"], len(indi["T"]), len(indi["move"]), len(indi["gen"])
         # for indi in population:
         #     print indi
-        indi, conv = evolution(maxIterator=5000, pc=0.8, pm=0.5, m_ran=0.5, m_uni=0.5, w=w)
+        indi, conv = evolution(maxIterator=5000, pc=0.8, pm=0.5, m_ran=float(m_ran), m_uni=float(m_uni), w=w)
 
         end_time = time.time()
         sum_lifetime = sum_lifetime + indi["fitness"]
@@ -789,7 +795,7 @@ while index < 1:
         confidence_interval.append(indi["fitness"])
         idRun = idRun + 1
 
-    row = {"Lan Chay": "Average", "Time": sum_time / nbRun, "Co Sac": sum_lifetime / nbRun,
+    row = {"Lan Chay": "Average", "Time": sum_time / nb_run, "Co Sac": sum_lifetime / nb_run,
            "Khong Sac": min([E[j] / e[j] for j, _ in enumerate(node_pos) if e[j] > 0])}
     writer.writerow(row)
 
