@@ -751,7 +751,7 @@ read_name = sys.argv[3]
 write_name = sys.argv[4]
 nb_run = sys.argv[5]
 index_range = sys.argv[6]
-while index < index_range:
+while index < int(index_range):
     print "Data Set ", index
     # if index == 2:
     # index = index + 1
@@ -767,7 +767,7 @@ while index < index_range:
     # nbRun = 5
     conv = []
     confidence_interval = []
-    for idRun in range(nb_run):
+    for idRun in range(int(nb_run)):
         start_time = time.time()
         random.seed(idRun)
         getData(file_name=read_name, index=index)
