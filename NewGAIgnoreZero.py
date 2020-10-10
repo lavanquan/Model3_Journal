@@ -671,7 +671,7 @@ def evolution(maxIterator, pc, pm, m_ran, m_uni, w):
     nbIte = 0
     t = 0
     conv = []
-    while t < maxIterator and nbIte < 200:
+    while t < maxIterator and nbIte < 500:
         # print "t = ", t, "Fitness = ", population[0]["fitness"]
         count = 0  # dem so lan mutation
         nproc = 5
@@ -795,7 +795,7 @@ while index < int(index_range):
         confidence_interval.append(indi["fitness"])
         idRun = idRun + 1
 
-    row = {"Lan Chay": "Average", "Time": sum_time / nb_run, "Co Sac": sum_lifetime / nb_run,
+    row = {"Lan Chay": "Average", "Time": sum_time / int(nb_run), "Co Sac": sum_lifetime / int(nb_run),
            "Khong Sac": min([E[j] / e[j] for j, _ in enumerate(node_pos) if e[j] > 0])}
     writer.writerow(row)
 
