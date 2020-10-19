@@ -789,15 +789,17 @@ while index < int(index_range):
         sum_lifetime = sum_lifetime + indi["fitness"]
         sum_time = sum_time + end_time - start_time
         # write to file
-        row = {"Lan Chay": "No." + str(idRun), "Time": end_time - start_time, "Co Sac": indi["fitness"],
-               "Khong Sac": min([E[j] / e[j] for j, _ in enumerate(node_pos) if e[j] > 0])}
+        # row = {"Lan Chay": "No." + str(idRun), "Time": end_time - start_time, "Co Sac": indi["fitness"],
+        #        "Khong Sac": min([E[j] / e[j] for j, _ in enumerate(node_pos) if e[j] > 0])}
+        row = {"Lan Chay": indi["T"], "Time": indi["move"], "Co Sac": indi["gen"],
+               "Khong Sac": indi["fitness"]}
         writer.writerow(row)
         confidence_interval.append(indi["fitness"])
         idRun = idRun + 1
 
-    row = {"Lan Chay": "Average", "Time": sum_time / int(nb_run), "Co Sac": sum_lifetime / int(nb_run),
-           "Khong Sac": min([E[j] / e[j] for j, _ in enumerate(node_pos) if e[j] > 0])}
-    writer.writerow(row)
+    # row = {"Lan Chay": "Average", "Time": sum_time / int(nb_run), "Co Sac": sum_lifetime / int(nb_run),
+    #        "Khong Sac": min([E[j] / e[j] for j, _ in enumerate(node_pos) if e[j] > 0])}
+    # writer.writerow(row)
 
     confidence = 0.95
     n = len(confidence_interval)
